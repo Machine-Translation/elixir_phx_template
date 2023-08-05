@@ -6,8 +6,7 @@ This template comes with multiple setup and test files to have the baseline need
 1. Test files (`docker-compose.test.yml` and `Dockerfile.test`) for running tests in GitHub workflows
 2. Production `Dockerfile`
 3. Development files (`docker-compose.yml` and `Dockerfile.dev`) for running locally
-4. `.github` folder that has testing workflows set up to run on push and dependabot to keep tools up-to-date
-5. `extra_files` folder that has starting points for common css and Phoenix components
+4. `extra_files` folder that has starting points for common css and Phoenix components
 
 # Preliminary setup
 Before running setup commands below, you must find and replace all instances of `[project_name]` and `[ProjectName]` within the repository. If working within VS Code, you can find-all-and-replace within the whole repository by clicking `ctrl + shift + h`. If you have one of the values highlighted within the `mix phx.new ...` command below and press the shortcut keys then it will autofill the find box with what you have highlighted.
@@ -53,3 +52,4 @@ docker-compose run app /bin/bash
     * `extra_files/assets/css/*` -> `assets/css/`. Replace `app.css` in `assets/css/` with the given one as there is baseline css for the application.
     * `extra_files/components/*` -> `lib/[project_name]_web/components`. Replace `core_components.ex` in the `lib` folder as the given one has extra components.
     * `extra_files/utils` -> `lib/[project_name]/utils`. This utils folder needs to be copied to the `lib` location.
+    * Run `sudo mv extra_files/.github/ .`. This `.github` folder that has testing workflows set up to run on push and dependabot to keep tools up-to-date. It will move the folder to the main repository directory for GitHub to find.
