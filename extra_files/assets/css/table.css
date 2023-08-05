@@ -1,0 +1,108 @@
+.header-attr {
+    @apply pl-10 pr-6 text-right pt-1 pb-3 text-gray-500 text-lg;
+  }
+  
+  .header-text {
+    @apply pb-3 text-lg;
+  }
+  
+  .tag-text {
+    @apply text-sm bg-gray-400 px-3 py-1 my-1 ml-4 rounded-lg;
+  }
+  
+  
+  .second-header {
+    @apply text-base font-normal text-center px-4 text-white sticky
+  }
+  
+  .vert-table td {
+    @apply px-4 py-2
+  }
+  
+  .vert-table td:first-child{
+    @apply font-bold
+  }
+  
+  .broken-rule {
+    background-color: #b8c2cc;
+    display: -webkit-inline-box;
+    @apply rounded-lg whitespace-nowrap p-2;
+  }
+  
+  .label {
+    display: inherit;
+    padding: .2em .6em .3em;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+  }
+  
+  .tooltip {
+    position: relative;
+    display: inline-block;
+    cursor: default;
+  }
+  
+  .tooltip .tooltip-text {
+    visibility: hidden;
+    width: max-content;
+    max-width: 25rem;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 25%;
+    right: -20%;
+    margin-right: -25px;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  .tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+    z-index: 300;
+  }
+  
+  
+  table.table {
+    & {
+      @apply min-w-full divide-y divide-gray-300;
+    }
+  
+    & thead {
+      @apply bg-blue-500;
+  
+      & tr {
+        @apply divide-x divide-gray-200;
+      }
+  
+      & th {
+        @apply whitespace-nowrap px-2 py-3.5 text-left text-sm font-semibold text-white;
+      }
+  
+      & th:first-child {
+        @apply sm:pl-6;
+      }
+    }
+  
+    & tbody {
+      @apply divide-y divide-gray-200 bg-white;
+  
+      & tr {
+        @apply divide-x divide-gray-200;
+      }
+  
+      & td {
+        @apply whitespace-nowrap px-2 py-2 text-sm font-medium text-gray-700;
+      }
+  
+      & td:first-child {
+        @apply sm:pl-6;
+      }
+    }
+  
+  }

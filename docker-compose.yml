@@ -1,0 +1,40 @@
+version: '3.7'
+
+x-phoenix: &phoenix
+  build:
+    context: .
+    dockerfile: Dockerfile.dev
+  links:
+  - db
+  volumes:
+  - .:/app
+  - ~/.config:/root/.config
+  - /tmp/:/tmp/
+  - elixir-artifacts:/app/elixir-artifacts
+  environment:
+    ELIXIR_BUILD_PATH: /app/elixir-artifacts/_build
+    ELIXIR_DEPS_PATH: /app/elixir-artifacts/deps
+    DATABASE_PASSWORD: postgres
+    DATABASE_HOSTNAME: db
+
+services:
+  app:
+    <<: *phoenix
+    command: elixir --sname [server_name]@app --cookie [ProjectName] -S mix phx.server
+    ports:
+      - "4000:4000"
+      
+  db:
+    image: postgres:12
+    volumes:
+    - db-data:/var/lib/postgresql/data
+    ports:
+    - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: [project_namd]_dev
+    shm_size: 256M
+
+volumes:
+  db-data:
+  elixir-artifacts:
