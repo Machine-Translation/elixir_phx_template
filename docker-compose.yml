@@ -20,7 +20,7 @@ x-phoenix: &phoenix
 services:
   app:
     <<: *phoenix
-    command: elixir --sname [server_name]@app --cookie [ProjectName] -S mix phx.server
+    command: elixir --sname [project_name]@app --cookie [ProjectName] -S mix phx.server
     ports:
       - "4000:4000"
       
@@ -32,7 +32,7 @@ services:
     - "5432:5432"
     environment:
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: [project_namd]_dev
+      POSTGRES_DB: [project_name]_dev
     shm_size: 256M
 
 volumes:

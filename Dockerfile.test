@@ -44,9 +44,7 @@ COPY priv priv
 COPY lib lib
 COPY test test
 COPY .formatter.exs .formatter.exs
-COPY .dialyzer_ignore.exs .dialyzer_ignore.exs
+# COPY .dialyzer_ignore.exs .dialyzer_ignore.exs
 COPY .credo.exs .credo.exs
-RUN mix compile 
-RUN mix ecto.create
-RUN mix ecto.migrate
+RUN mix compile
 

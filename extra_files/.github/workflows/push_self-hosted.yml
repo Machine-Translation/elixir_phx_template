@@ -2,7 +2,7 @@ on: push
 
 env:
   MIX_ENV: test
-  COMPOSE_PROJECT_NAME: simple_budgeting_test
+  COMPOSE_PROJECT_NAME: [project_name]_test
 
 jobs:
   dependencies:

@@ -1,0 +1,30 @@
+on: push
+
+env:
+  MIX_ENV: test
+  COMPOSE_PROJECT_NAME: [project_name]_test
+
+jobs:
+  dependencies:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.1
+    - name: Build
+      run: docker compose -f docker-compose.test.yml build app
+    - name: Create Repo
+      run: docker compose -f docker-compose.test.yml run app mix ecto.create
+    - name: Migrate
+      run: docker compose -f docker-compose.test.yml run app mix ecto.migrate
+    - name: Compile warnings
+      run: docker compose -f docker-compose.test.yml run app mix compile --force --warnings-as-errors
+    - name: Ex-Unit
+      run: docker compose -f docker-compose.test.yml run app mix test --warnings-as-errors
+    - name: Credo
+      run: docker compose -f docker-compose.test.yml run app mix credo
+    - name: Format
+      run: docker compose -f docker-compose.test.yml run app mix format --check-formatted
+    - name: Dialyzer
+      run: docker compose -f docker-compose.test.yml run app mix dialyzer --format github
+    - name: Down
+      if: ${{ always() }}
+      run: docker compose -f docker-compose.test.yml down

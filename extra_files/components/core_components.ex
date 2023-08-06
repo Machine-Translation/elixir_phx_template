@@ -1,4 +1,4 @@
-defmodule TestingWeb.CoreComponents do
+defmodule [ProjectName]Web.CoreComponents do
   @moduledoc """
   Provides core UI components.
 
@@ -17,7 +17,7 @@ defmodule TestingWeb.CoreComponents do
   use Phoenix.Component
 
   alias Phoenix.LiveView.JS
-  import TestingWeb.Gettext
+  import [ProjectName]Web.Gettext
 
   @doc """
   Renders a modal.
@@ -297,7 +297,6 @@ defmodule TestingWeb.CoreComponents do
     |> assign_new(:value, fn -> field.value end)
     |> input()
   end
-  
 
   def input(%{type: "search_select"} = assigns) do
     ~H"""
@@ -705,7 +704,7 @@ defmodule TestingWeb.CoreComponents do
   end
 
   attr :id, :string, required: true
-  attr :default_js, :JS, required: true
+  attr :default_js, JS, default: %JS{}
   attr :default_value, :any, required: true
   attr :default_label, :string, required: true
 
@@ -713,7 +712,7 @@ defmodule TestingWeb.CoreComponents do
 
   @doc """
   Creates a dropdown that has a button attached to it.
-  
+
   This can be used as a dropdown with a default button to make
   navigation easier for users.
 
@@ -742,7 +741,6 @@ defmodule TestingWeb.CoreComponents do
   def dropdown_with_button(assigns) do
     ~H"""
     <div class="inline-flex rounded-md shadow-sm" phx-click-away={hide_dropdown(@id)}>
-      
       <button
         type="button"
         phx-click={@default_js}
@@ -947,7 +945,6 @@ defmodule TestingWeb.CoreComponents do
          "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"}
     )
   end
-  
 
   def push_hide_modal(socket, id) do
     Phoenix.LiveView.push_event(socket, "js-exec", %{
@@ -1041,26 +1038,8 @@ defmodule TestingWeb.CoreComponents do
   def pill(assigns) do
     %{size: size, color: color} = assigns
 
-    size_css =
-      case size do
-        "small" -> "text-sm px-3 py-1 font-medium"
-        "medium" -> "text-base px-4 py-1 font-medium"
-        "large" -> "text-xl px-9 py-3 font-bold"
-        "xlarge" -> "text-xl px-9 py-3 font-bold"
-      end
-
-    color_css =
-      case color do
-        "red" -> "!bg-red-200 !text-red-900"
-        "black" -> "!bg-black !text-white"
-        "green" -> "!bg-green-200 !text-green-900"
-        "yellow" -> "!bg-yellow-200 !text-yellow-900"
-        "blue" -> "!bg-blue-300 !text-blue-900"
-        "white" -> "!bg-white !text-gray-900"
-        "gray" -> "!bg-gray-100 !text-gray-900"
-        "dark-gray" -> "!bg-gray-300 !text-gray-900"
-        "orange" -> "!bg-orange-300 !text-orange-900"
-      end
+    size_css = pill_size(size)
+    color_css = pill_color(color)
 
     assigns =
       assigns
@@ -1077,6 +1056,21 @@ defmodule TestingWeb.CoreComponents do
     </span>
     """
   end
+
+  defp pill_size("small"), do: "text-sm px-3 py-1 font-medium"
+  defp pill_size("medium"), do: "text-base px-4 py-1 font-medium"
+  defp pill_size("large"), do: "text-xl px-9 py-3 font-bold"
+  defp pill_size("xlarge"), do: "text-xl px-9 py-3 font-bold"
+
+  defp pill_color("red"), do: "!bg-red-200 !text-red-900"
+  defp pill_color("black"), do: "!bg-black !text-white"
+  defp pill_color("green"), do: "!bg-green-200 !text-green-900"
+  defp pill_color("yellow"), do: "!bg-yellow-200 !text-yellow-900"
+  defp pill_color("blue"), do: "!bg-blue-300 !text-blue-900"
+  defp pill_color("white"), do: "!bg-white !text-gray-900"
+  defp pill_color("gray"), do: "!bg-gray-100 !text-gray-900"
+  defp pill_color("dark-gray"), do: "!bg-gray-300 !text-gray-900"
+  defp pill_color("orange"), do: "!bg-orange-300 !text-orange-900"
 
   attr :class, :string, default: nil
   attr :table_class, :string, default: nil
@@ -1137,7 +1131,7 @@ defmodule TestingWeb.CoreComponents do
     </section>
     """
   end
-  
+
   attr :class, :string, default: nil
   attr :table_class, :string, default: nil
   attr :queryable, :any, required: true
@@ -1238,9 +1232,9 @@ defmodule TestingWeb.CoreComponents do
     # with our gettext backend as first argument. Translations are
     # available in the errors.po file (as we use the "errors" domain).
     if count = opts[:count] do
-      Gettext.dngettext(TestingWeb.Gettext, "errors", msg, msg, count, opts)
+      Gettext.dngettext([ProjectName]Web.Gettext, "errors", msg, msg, count, opts)
     else
-      Gettext.dgettext(TestingWeb.Gettext, "errors", msg, opts)
+      Gettext.dgettext([ProjectName]Web.Gettext, "errors", msg, opts)
     end
   end
 

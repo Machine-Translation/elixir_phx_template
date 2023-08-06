@@ -23,16 +23,16 @@ defmodule [ProjectName]Web.Component.SearchSelect do
   def update(assigns, socket) do
     %{options: options, value: value} = assigns
 
-    options = 
-      Enum.map(options, fn 
-        {label,value} -> {to_string(label), value}
+    options =
+      Enum.map(options, fn
+        {label, value} -> {to_string(label), value}
         value -> {to_string(value), value}
       end)
 
-    {term, value} = 
-      if value do 
-        Enum.find(options, fn {_, v} -> v == value end ) || {nil, nil}
-      else 
+    {term, _value} =
+      if value do
+        Enum.find(options, fn {_, v} -> v == value end) || {nil, nil}
+      else
         {nil, nil}
       end
 
@@ -106,7 +106,7 @@ defmodule [ProjectName]Web.Component.SearchSelect do
   @impl true
   def handle_event("keyup", %{"key" => "Enter"}, socket) do
     %{highlighted_idx: highlighted_idx, filtered_options: filtered_options} = socket.assigns
-    {term, value} = selected = Enum.at(filtered_options, highlighted_idx) || nil
+    {term, value} = _selected = Enum.at(filtered_options, highlighted_idx) || nil
 
     socket =
       socket
@@ -164,9 +164,9 @@ defmodule [ProjectName]Web.Component.SearchSelect do
 
   @impl true
   def handle_event("select", %{"selected" => selected}, socket) do
-    %{options: options, term: term, id: id} = socket.assigns
+    %{options: options, id: id} = socket.assigns
 
-    {term, value} = Enum.find(options, fn {_, v} -> to_string(v) == selected end )
+    {term, value} = Enum.find(options, fn {_, v} -> to_string(v) == selected end)
 
     socket =
       socket
@@ -231,7 +231,7 @@ defmodule [ProjectName]Web.Component.SearchSelect do
   #   |> Enum.take(75)
   # end
 
-   defp filtered_options(options, nil) do
+  defp filtered_options(options, nil) do
     options
     |> Enum.take(75)
   end
@@ -240,7 +240,7 @@ defmodule [ProjectName]Web.Component.SearchSelect do
     term = to_string(term)
 
     options
-    |> Seqfuzz.filter(term, &(elem(&1, 0)))
+    |> Seqfuzz.filter(term, &elem(&1, 0))
     |> Enum.take(75)
   end
 
