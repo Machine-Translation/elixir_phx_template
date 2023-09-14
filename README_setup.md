@@ -32,13 +32,23 @@ docker exec -i [db container id] psql -U postgres -c "ALTER USER postgres PASSWO
 Now stop the running containers. Then, go into `config/dev.exs` and `config/test.exs` and make sure the Repo config looks like it does below. It makes sure that the values we set in the docker-compose yml files are used and so we do not have hardcoded passwords in elixir code.
 
 ``` elixir
-config :predicting_resistance, [ProjectName].Repo,
+# config/dev.exs
+config :[project_name], [ProjectName].Repo,
   username: System.get_env("DATABASE_USERNAME") || "postgres",
-  password: System.get_env("DATABASE_PASSWORD") || "",
+  password: System.get_env("DATABASE_PASSWORD") || "postgres",
   hostname: System.get_env("DATABASE_HOSTNAME") || "localhost",
-  database: "predicting_resistance_dev",
+  database: "[project_name]_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
+  pool_size: 10
+
+# config/test.exs
+config :[project_name], [ProjectName].Repo,
+  username: System.get_env("DATABASE_USERNAME") || "postgres",
+  password: System.get_env("DATABASE_PASSWORD") || "postgres",
+  hostname: System.get_env("DATABASE_HOSTNAME") || "localhost",
+  database: "[project_name]_test#{System.get_env("MIX_TEST_PARTITION")}",
+  pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 ```
 
@@ -52,6 +62,9 @@ docker-compose run app /bin/bash
 # Add Credo (Code analysis tool for code consistency): {:credo, "~> 1.6", only: [:dev, :test], runtime: false}
 
     # Generate credo configuration (https://hexdocs.pm/credo/config_file.html)
+    exit
+docker-compose run app /bin/bash
+    mix deps.get
     mix credo gen.config
 
 # Add Dialyxir (Code analysis tool for hidden warnings/errors): {:dialyxir, "~> 1.3", only: [:dev, :test], runtime: false}
@@ -64,10 +77,14 @@ docker-compose run app /bin/bash
 # NOTE THAT EX Doc MUST appear in the mix.exs list after SeqFuzz due to dependency conflicts
 # Add EX Doc (Elixir documentation tool): {:ex_doc, "~> 0.27", only: :dev, runtime: false, override: true}
 
+# Set up Tzdata for datetime showing in browser
+
 # (Optional) Add Oban (For background jobs): {:oban, "~> 2.14"}
 
 # Finish EX Doc installation guide: https://github.com/elixir-lang/ex_doc
 
+    exit
+docker-compose run app /bin/bash
     mix setup
 
 # If installed, add Oban requirements: https://hexdocs.pm/oban/installation.html

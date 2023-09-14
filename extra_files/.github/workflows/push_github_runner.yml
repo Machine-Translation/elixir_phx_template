@@ -5,7 +5,7 @@ env:
   COMPOSE_PROJECT_NAME: [project_name]_test
 
 jobs:
-  dependencies:
+  code_testing_and_formatting:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2.3.1

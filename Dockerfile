@@ -33,17 +33,11 @@ WORKDIR /app
 # Install deps
 COPY mix.exs mix.lock ./
 COPY config config
-RUN mix deps.get && \
-    mix deps.compile
-
-# Install assets
-COPY assets assets
-RUN yarn --cwd assets install
-
-# Compile and digest the app
 COPY priv priv
 COPY lib lib
-RUN mix compile && \
-    mix assets.deploy
+COPY assets assets
+RUN mix deps.get 
+RUN mix assets.setup 
+RUN mix assets.build
 
 CMD mix phx.server

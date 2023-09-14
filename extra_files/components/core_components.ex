@@ -115,7 +115,7 @@ defmodule [ProjectName]Web.CoreComponents do
       phx-click={JS.push("lv:clear-flash", value: %{key: @kind}) |> hide("##{@id}")}
       role="alert"
       class={[
-        "fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1",
+        "fixed top-2 right-2 w-80 sm:w-96 z-50 rounded-lg p-3 ring-1 ring-font",
         @kind == :info && "bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900",
         @kind == :error && "bg-rose-50 text-rose-900 shadow-md ring-rose-500 fill-rose-900"
       ]}
@@ -305,7 +305,7 @@ defmodule [ProjectName]Web.CoreComponents do
       <.live_component
         module={[ProjectName]Web.Component.SearchSelect}
         id={@id || @name}
-        f={@f}
+        field={@field}
         name={@name}
         value={@value}
         options={@options}
@@ -392,7 +392,7 @@ defmodule [ProjectName]Web.CoreComponents do
 
   def input(%{type: "select"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
       <select
         id={@id}
@@ -411,7 +411,7 @@ defmodule [ProjectName]Web.CoreComponents do
 
   def input(%{type: "textarea"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
       <textarea
         id={@id}
@@ -432,7 +432,7 @@ defmodule [ProjectName]Web.CoreComponents do
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="field">
       <.label for={@id}><%= @label %></.label>
       <input
         type={@type}
@@ -597,13 +597,80 @@ defmodule [ProjectName]Web.CoreComponents do
 
   def list(assigns) do
     ~H"""
-    <div class="mt-14">
-      <dl class="-my-4 divide-y divide-zinc-100">
-        <div :for={item <- @item} class="flex gap-4 py-4 text-sm leading-6 sm:gap-8">
-          <dt class="w-1/4 flex-none text-zinc-500"><%= item.title %></dt>
+    <div class="mt-4">
+      <dl class="divide-y divide-zinc-100">
+        <div :for={item <- @item} class="flex flex-row justify-between gap-4 py-4">
+          <dt class="w-1/4 flex-none text-zinc-500 ml-3"><%= item.title %></dt>
           <dd class="text-zinc-700"><%= render_slot(item) %></dd>
         </div>
       </dl>
+    </div>
+    """
+  end
+
+  @doc """
+  Renders a detailed list with descriptions.
+
+  ## Examples
+
+    <.description_list>
+      <.description_list_row>
+        <:label>Title</:label>
+        <div class="flex flex-row items-center">
+          <%= @post.title %>
+        </div>
+      </.description_list_row>
+      
+      <.description_list_row>
+        <:label>Status</:label>
+        <div class="flex flex-row items-center">
+          <%= @post.status %>
+        </div>
+      </.description_list_row>
+    </.description_list>
+  """
+  attr :class, :string, default: nil
+  attr :dl_class, :string, default: nil
+
+  slot :title
+  slot :description
+  slot :inner_block, required: true
+
+  def description_list(assigns) do
+    ~H"""
+    <section class={@class}>
+      <%= if @title != [] do %>
+        <h3 class="text-lg leading-6 font-medium">
+          <%= render_slot(@title) %>
+        </h3>
+      <% end %>
+      <%= if @description != [] do %>
+        <p class="mt-1 max-w-2xl text-sm">
+          <%= render_slot(@description) %>
+        </p>
+      <% end %>
+      <div class={[@title != [] && "mt-5 border-t border-font"]}>
+        <dl class={["divide-y divide-font", @dl_class]}>
+          <%= render_slot(@inner_block) %>
+        </dl>
+      </div>
+    </section>
+    """
+  end
+
+  attr :class, :string, default: nil
+  slot :label, required: true
+  slot :inner_block, required: true
+
+  def description_list_row(assigns) do
+    ~H"""
+    <div class={["px-3 py-2 sm:py-3 sm:grid sm:grid-cols-4 sm:gap-4", @class]}>
+      <dt class="text-base font-medium">
+        <%= render_slot(@label) %>
+      </dt>
+      <dd class="mt-1 text-base sm:mt-0 sm:col-span-3">
+        <%= render_slot(@inner_block) %>
+      </dd>
     </div>
     """
   end
@@ -623,9 +690,9 @@ defmodule [ProjectName]Web.CoreComponents do
     <div class="mt-16">
       <.link
         navigate={@navigate}
-        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
+        class="text-sm font-semibold leading-6 text-zinc-900 hover:text-zinc-700 hover:underline"
       >
-        <.icon name="hero-arrow-left-solid" class="h-3 w-3" />
+        <.icon name="hero-arrow-left-solid" class="h-8 w-8" />
         <%= render_slot(@inner_block) %>
       </.link>
     </div>
@@ -695,7 +762,7 @@ defmodule [ProjectName]Web.CoreComponents do
 
       <div
         id={@id}
-        class="dropdown hidden absolute right-0 z-10 mt-2 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
+        class="dropdown hidden absolute right-0 z-10 p-1 w-56 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none"
       >
         <%= render_slot(@content, toggle: toggle_dropdown(@id)) %>
       </div>
